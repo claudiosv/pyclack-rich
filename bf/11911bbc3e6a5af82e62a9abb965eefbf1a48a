@@ -1,0 +1,97 @@
+pyproject.toml
+  h_aceaeb4e74d6dc 6,17,24-26
+  s_ccef399279de89::t_3908f078ff39a8 34
+  s_346c4f53212f87::t_ee2f1dffb1fc8e 1-5,7-9,11-16,18-23,27-33
+  s_346c4f53212f87::t_d12e588447b5fa 10
+src/pyclack/utils/styling.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-2,4-9,16,57-67,71,75,79,83,87,91,95,99,103,107,111,115,118-120,125,127,129,131,137,139,141,144
+src/pyclack/core/multiselect.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-103
+src/pyclack/core/confirm.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-4,11,41,45,50,52,57
+src/pyclack/prompts/__init__.py
+  s_ccef399279de89::t_0afd169903df10 24
+  s_ccef399279de89::t_fe611d9b82e820 21-23
+  s_ccef399279de89::t_2f829db39982fc 25-27
+  s_ccef399279de89::t_ddc757b62d80e3 1-7,10,12,15-18,28-30,34-35,38,52-62,78-79,93,110-111
+pyclack_demo.py
+  s_ccef399279de89::t_a8fa9ff575851e 94-105
+  s_ccef399279de89::t_f3f3cc985c8a90 1-2,5-6,111,114,118-135,137,144,147
+  s_ccef399279de89::t_3d427d81b5277b 7
+src/pyclack/core/select.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-28,31-70,72
+src/pyclack/core/__init__.py
+  s_ccef399279de89::t_1e3880771e4e77 12
+  s_ccef399279de89::t_b9efe0fcd566e3 9-11
+  s_ccef399279de89::t_530758bc2b2c2e 13-15
+  s_ccef399279de89::t_36b7f633622a4e 2-8
+src/pyclack/core/prompt.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-5,7-10,17,25,28,32,45-47,85,96,98,100,102,120-121,123-126,128,135-152,154-158,163,168-171
+src/pyclack/core/select_key.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-84
+src/pyclack/prompts/text.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-9,17-18,34-36,42,56,65-66,70,84-87
+src/pyclack/prompts/progress.py
+  s_ccef399279de89::t_7cc19932a1a18c 2-7,9-22
+  s_ccef399279de89::t_f7a7d197e71da6 1,8
+README.md
+  s_ccef399279de89::t_f3f3cc985c8a90 130,134-136,138,145,147,151-152,154-156,168,175,178-179,181,189,195-196,215-216,227,234-236,251-252,286,291,303,305,316,318-319,321,333,335-336,338-342,373,385,398,400,411-412,422,437,477-479
+  s_ccef399279de89::t_067fb525ace480 488
+src/pyclack/core/password.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-7,14,17,44,48,61,71
+src/pyclack/core/shimmer_progress.py
+  s_ccef399279de89::t_f3f3cc985c8a90 7,14-16
+  s_ccef399279de89::t_9f5822542bb64a 12-13,18-274
+  s_ccef399279de89::t_d86d1e576b1db4 1-6,8-11,17,275-279
+src/pyclack/core/text.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-173
+src/pyclack/prompts/password.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-6,8-9,15-16,28,30,36,44-48
+src/pyclack/core/group.py
+  s_ccef399279de89::t_f3f3cc985c8a90 1-61
+uv.lock
+  s_ccef399279de89::t_0c058f81c4d338 1-78
+src/pyclack/__init__.py
+  s_ccef399279de89::t_bb6466456bc59d 1-5
+src/pyclack/core/spinner.py
+  s_ccef399279de89::t_7b81b0cf6b27d0 1-17,21,23,25-26,33-41,44-46,49,51,56-57
+src/pyclack/prompts/confirm.py
+  s_ccef399279de89::t_b7edeab256c2d0 1-4,6,12-13,19,26,32-46,56
+src/pyclack/prompts/mutliselect.py
+  s_ccef399279de89::t_70ba092d12dd34 1-6,8,14-17,23-25,28,36,38,40,42,45,47,55-56,72,90-92,102-117,119-125,142-146
+src/pyclack/prompts/select.py
+  s_ccef399279de89::t_4869d854a17ed4 1-8,14-16,22,24-25,30,33,35,37,44,56-66,76-78
+src/pyclack/prompts/spinner.py
+  s_ccef399279de89::t_e66c1b69db4ca1 3,48
+src/pyclack/utils/console.py
+  s_ccef399279de89::t_a1ec3250c37389 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bf11911bbc3e6a5af82e62a9abb965eefbf1a48a",
+  "prompts": {},
+  "humans": {
+    "h_aceaeb4e74d6dc": {
+      "author": "Claudio Spiess <claudiosv@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_346c4f53212f87": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c3b7d42e-db27-4906-a7ae-da06924d3d25",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Claudio Spiess <claudiosv@users.noreply.github.com>"
+    },
+    "s_ccef399279de89": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "51aa7f49-4ac9-4197-ae8c-a51aff4128ea",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Claudio Spiess <claudiosv@users.noreply.github.com>"
+    }
+  }
+}
