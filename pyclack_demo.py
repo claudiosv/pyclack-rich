@@ -71,6 +71,11 @@ async def main():
     if is_cancel(tools):
         return
 
+    # Alternate menu style: a boxed, centered picker (ported from rich_menu)
+    package_manager = await menu("Pick a package manager", "npm", "pnpm", "yarn", "bun")
+    if is_cancel(package_manager):
+        return
+
     # Install dependencies
     install = await confirm(
         message="Install dependencies?", active="Yes", inactive="No", initial_value=True
@@ -104,7 +109,7 @@ async def main():
                 await asyncio.sleep(0.08)
 
     # Next steps
-    steps = ["cd .", "pnpm dev"]
+    steps = ["cd .", f"{package_manager} dev"]
 
     note(title="Next steps.", content=steps)
     outro(

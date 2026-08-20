@@ -4,6 +4,7 @@ from typing import Any
 from .confirm import ConfirmPrompt as ConfirmPrompt
 from .group import PromptGroupOptions as PromptGroupOptions
 from .group import group as group
+from .menu import Menu as Menu
 from .multiselect import MultiSelectPrompt as MultiSelectPrompt
 from .password import PasswordPrompt as PasswordPrompt
 from .prompt import is_cancel as is_cancel

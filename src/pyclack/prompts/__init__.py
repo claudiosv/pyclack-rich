@@ -19,6 +19,8 @@ from pyclack.utils.styling import (
 )
 
 from .confirm import confirm as confirm
+from .menu import menu as menu
+from .menu import multi_menu as multi_menu
 from .mutliselect import multiselect as multiselect
 from .password import password as password
 from .progress import progress as progress
