@@ -1,16 +1,21 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, TypeVar
+
 from .prompt import *
-from .select import Option
-from typing import Any, Generic, TypeVar, List, Optional
+
+if TYPE_CHECKING:
+    from .select import Option
 
 T = TypeVar("T")
 
 
-class MultiSelectPrompt(Prompt, Generic[T]):
+class MultiSelectPrompt[T](Prompt):
     def __init__(
         self,
-        render: Callable[["MultiSelectPrompt"], Optional[str]],
-        options: List[Option],
-        initial_values: List[Any] = None,
+        render: Callable[[MultiSelectPrompt], str | None],
+        options: list[Option],
+        initial_values: list[Any] | None = None,
         required: bool = False,
         cursor_at: Any = None,
         debug: bool = False,
@@ -37,7 +42,7 @@ class MultiSelectPrompt(Prompt, Generic[T]):
         return self._cursor
 
     @cursor.setter
-    def cursor(self, value: int):
+    def cursor(self, value: int) -> None:
         self._cursor = value
 
     @property
@@ -63,16 +68,16 @@ class MultiSelectPrompt(Prompt, Generic[T]):
         else:
             self.value = [*self.value, current]
 
-    def _handle_key(self, char: str):
+    def _handle_key(self, char: str) -> None:
         """Handle key press events."""
         if char == "a":
             self.toggle_all()
 
-    def _handle_cursor(self, key: str):
+    def _handle_cursor(self, key: str) -> None:
         """Handle cursor movement and space selection."""
-        if key in ("left", "up"):
+        if key in {"left", "up"}:
             self.cursor = len(self.options) - 1 if self.cursor == 0 else self.cursor - 1
-        elif key in ("down", "right"):
+        elif key in {"down", "right"}:
             self.cursor = 0 if self.cursor == len(self.options) - 1 else self.cursor + 1
         elif key == "space":
             self.toggle_value()

@@ -1,6 +1,10 @@
-from .prompt import *
+from __future__ import annotations
+
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Generic, TypeVar, List, Optional, Callable, TypeVar
+from typing import Any, TypeVar
+
+from .prompt import *
 
 T = TypeVar("T")
 
@@ -14,10 +18,10 @@ class Option:
 class SelectPrompt(Prompt):
     def __init__(
         self,
-        render: Callable[["SelectPrompt"], str],
-        options: List["Option"],
+        render: Callable[[SelectPrompt], str],
+        options: list[Option],
         initial_value: Any = None,
-        validate: Optional[Callable[[Any], Optional[str]]] = None,
+        validate: Callable[[Any], str | None] | None = None,
         debug: bool = False,
     ):
         super().__init__(
@@ -46,7 +50,7 @@ class SelectPrompt(Prompt):
             self.state = "cancel"
             return False
 
-        elif key == readchar.key.ENTER:
+        if key == readchar.key.ENTER:
             if self.validate:
                 problem = self.validate(self.value)
                 if problem:
@@ -57,11 +61,11 @@ class SelectPrompt(Prompt):
             return False
 
         # Handle arrow keys
-        elif key in (readchar.key.UP, "k"):
+        if key in {readchar.key.UP, "k"}:
             self._cursor = (self._cursor - 1) % len(self.options)
             self.value = self.options[self._cursor].value
 
-        elif key in (readchar.key.DOWN, "j"):
+        elif key in {readchar.key.DOWN, "j"}:
             self._cursor = (self._cursor + 1) % len(self.options)
             self.value = self.options[self._cursor].value
 

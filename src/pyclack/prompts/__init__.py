@@ -1,31 +1,41 @@
-from .text import text, multiline_text
-from .password import password
-from .select import select
-from .mutliselect import multiselect
-from .confirm import confirm
-from .spinner import spinner, with_spinner
-from pyclack.core import Option, is_cancel
+from __future__ import annotations
+
+from rich.text import Text
+
+from pyclack.core import Option as Option
+from pyclack.core import is_cancel as is_cancel
+from pyclack.utils.console import console
 from pyclack.utils.styling import (
-    Color,
-    strip_ansi,
     S_BAR,
-    S_STEP_SUBMIT,
-    S_CORNER_TOP_RIGHT,
+    S_BAR_END,
     S_BAR_H,
+    S_BAR_START,
     S_CONNECT_LEFT,
     S_CORNER_BOTTOM_RIGHT,
-    S_BAR_START,
-    S_BAR_END,
+    S_CORNER_TOP_RIGHT,
+    S_STEP_SUBMIT,
+    Color,
+    visible_len,
 )
+
+from .confirm import confirm as confirm
+from .mutliselect import multiselect as multiselect
+from .password import password as password
+from .progress import progress as progress
+from .select import select as select
+from .spinner import spinner as spinner
+from .spinner import with_spinner as with_spinner
+from .text import multiline_text as multiline_text
+from .text import text as text
 
 
 def create_note(message: str = "", title: str = "") -> str:
     lines = f"\n{message}\n".split("\n")
-    title_len = len(strip_ansi(title))
-    max_len = max(max(len(strip_ansi(ln)) for ln in lines), title_len) + 2
+    title_len = visible_len(title)
+    max_len = max(*(visible_len(ln) for ln in lines), title_len) + 2
 
     formatted_lines = [
-        f"{Color.gray(S_BAR)}  {Color.dim(ln)}{' ' * (max_len - len(strip_ansi(ln)))}{Color.gray(S_BAR)}"
+        f"{Color.gray(S_BAR)}  {Color.dim(ln)}{' ' * (max_len - visible_len(ln))}{Color.gray(S_BAR)}"
         for ln in lines
     ]
 
@@ -39,11 +49,17 @@ def create_note(message: str = "", title: str = "") -> str:
     )
 
 
-def note(message: str = None, title: str = "", content: list = []) -> str:
-    print(
-        create_note(
-            message=message if message else "\n".join(content),
-            title=title if title else "Next steps.",
+def note(
+    message: str | None = None, title: str = "", content: list | None = None
+) -> str:
+    if content is None:
+        content = []
+    console.print(
+        Text.from_markup(
+            create_note(
+                message=message or "\n".join(content),
+                title=title or "Next steps.",
+            )
         )
     )
 
@@ -59,8 +75,8 @@ def intro(title: str = "", options=None) -> None:
         options = {"color": Color.gray}
 
     color = options.get("color", Color.gray)
-    print("\033[H\033[J")  # Clear screen
-    print(f"{color(S_BAR_START)}  {title}")
+    console.clear()
+    console.print(Text.from_markup(f"{color(S_BAR_START)}  {title}"))
 
 
 def outro(message: str = "", options=None) -> None:
@@ -74,7 +90,7 @@ def outro(message: str = "", options=None) -> None:
         options = {"color": Color.gray}
 
     color = options.get("color", Color.gray)
-    print(f"{color(S_BAR)}\n{color(S_BAR_END)}  {message}\n")
+    console.print(Text.from_markup(f"{color(S_BAR)}\n{color(S_BAR_END)}  {message}\n"))
 
 
 def link(url, label=None, options=None):
@@ -91,6 +107,5 @@ def link(url, label=None, options=None):
     label = label or url
     color = options.get("color")
 
-    # Build link with color function applied to the whole link if color exists
-    link = f"\033]8;;{url}\033\\{label}\033]8;;\033\\"
-    return color(link) if color else link
+    link_markup = f"[link={url}]{label}[/link]"
+    return color(link_markup) if color else link_markup

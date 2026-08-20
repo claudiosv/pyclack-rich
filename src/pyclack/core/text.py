@@ -1,16 +1,20 @@
-from .prompt import *
+from __future__ import annotations
+
+from collections.abc import Callable
+
 from pyclack.utils.styling import Color
-from typing import Optional, Callable, Any, Union
+
+from .prompt import *
 
 
 class TextPrompt(Prompt):
     def __init__(
         self,
-        render: Callable[["TextPrompt"], str],
+        render: Callable[[TextPrompt], str],
         placeholder: str = "",
         default_value: str = "",
         initial_value: str = "",
-        validate: Optional[Callable[[str], Optional[str]]] = None,
+        validate: Callable[[str], str | None] | None = None,
         debug: bool = False,
     ):
         super().__init__(
@@ -34,13 +38,13 @@ class TextPrompt(Prompt):
     def cursor(self) -> int:
         return self._cursor
 
-    def _handle_finalize(self, *args):
+    def _handle_finalize(self, *args) -> None:
         """Handle the finalize event."""
         if not self.value and self.default_value:
             self.value = self.default_value
         self.value_with_cursor = self.value
 
-    def _handle_key(self, char: str):
+    def _handle_key(self, char: str) -> None:
         """Handle key input events."""
         if char == readchar.key.BACKSPACE:
             if self._cursor > 0:
@@ -53,7 +57,7 @@ class TextPrompt(Prompt):
         self.value = "".join(self._text_buffer)
         self._update_value_with_cursor()
 
-    def _update_value_with_cursor(self):
+    def _update_value_with_cursor(self) -> None:
         """Update the value_with_cursor property based on current cursor position."""
         if self._cursor >= len(self.value):
             self.value_with_cursor = f"{self.value}{Color.inverse(Color.hidden('_'))}"
@@ -73,11 +77,11 @@ class TextPrompt(Prompt):
 class MultilineTextPrompt(TextPrompt):
     def __init__(
         self,
-        render: Callable[["MultilineTextPrompt"], str],
+        render: Callable[[MultilineTextPrompt], str],
         placeholder: str = "",
         default_value: str = "",
         initial_value: str = "",
-        validate: Optional[Callable[[str], Optional[str]]] = None,
+        validate: Callable[[str], str | None] | None = None,
         debug: bool = False,
     ):
         super().__init__(
@@ -103,7 +107,7 @@ class MultilineTextPrompt(TextPrompt):
         """Return current cursor position as (line, column)."""
         return (self._cursor_line, self._cursor_col)
 
-    def _handle_key(self, char: str):
+    def _handle_key(self, char: str) -> None:
         """Handle key input events with multiline support."""
         if (
             char == readchar.key.CTRL_J
@@ -151,7 +155,7 @@ class MultilineTextPrompt(TextPrompt):
         self.value = "\n".join("".join(line) for line in self._lines)
         self._update_value_with_cursor()
 
-    def _update_value_with_cursor(self):
+    def _update_value_with_cursor(self) -> None:
         """Update the value_with_cursor property for multiline text."""
         lines_with_cursor = []
         for i, line in enumerate(self._lines):

@@ -1,9 +1,9 @@
-"""
-demo file
-"""
-from pyclack.core import group, PromptGroupOptions
-from pyclack.prompts import *
+"""demo file."""
+
 import asyncio
+
+from pyclack.core import PromptGroupOptions, group
+from pyclack.prompts import *
 
 
 async def simulate_install():
@@ -91,42 +91,60 @@ async def main():
         # Method 2: Using decorated function
         # await install_deps()
 
+        # Method 3: Multi-phase progress bar (rich Progress under the hood)
+        async with progress() as p:
+            for pct in range(0, 101, 10):
+                p.on_progress("Downloading packages", current=pct, total=100)
+                await asyncio.sleep(0.05)
+            for found in range(0, 43, 7):
+                p.on_progress("Resolving dependencies", current=found)
+                await asyncio.sleep(0.08)
+            for pct in range(0, 101, 20):
+                p.on_progress("Installing", current=pct, total=100)
+                await asyncio.sleep(0.08)
+
     # Next steps
     steps = ["cd .", "pnpm dev"]
 
     note(title="Next steps.", content=steps)
     outro(
-        f"{Color.dim(f'Problems? {link(url='https://github.com/Bbalduzz/pyclack')}')}"
+        f"{Color.dim(f'Problems? {link(url="https://github.com/Bbalduzz/pyclack")}')}"
     )
+
 
 async def group_main():
     intro("pyclack")
 
-    user_info = await group({
-        "project_path": lambda _: text(
-            message="Where should we create your project?",
-            placeholder=".",
-            initial_value=".",
+    user_info = await group(
+        {
+            "project_path": lambda _: text(
+                message="Where should we create your project?",
+                placeholder=".",
+                initial_value=".",
+            ),
+            "textarea": lambda _: multiline_text(
+                message="Enter your multiline text (Ctrl + J for new line):",
+                placeholder="Start typing...",
+            ),
+            "password": lambda _: password(
+                message="Enter your secret",
+                validate=lambda x: "password is too short" if len(x) < 5 else None,
+            ),
+        },
+        PromptGroupOptions(
+            on_cancel=lambda results: print(f"Canceled with partial results: {results}")
         ),
-        "textarea": lambda _: multiline_text(
-            message="Enter your multiline text (Ctrl + J for new line):",
-            placeholder="Start typing...",
-        ),
-        "password": lambda _: password(
-            message="Enter your secret",
-            validate=lambda x: "password is too short" if len(x) < 5 else None,
-        )
-    }, PromptGroupOptions(
-        on_cancel=lambda results: print(f"Canceled with partial results: {results}")
-    ))
+    )
 
     note(title="Group results:", content=[f"user_info: {user_info}"])
     outro("Bye!")
     if any(is_cancel(value) for value in user_info.values()):
         return
 
+
 if __name__ == "__main__":
     import sys
+
     if sys.argv[1] == "group":
         asyncio.run(group_main())
     elif sys.argv[1] == "main":

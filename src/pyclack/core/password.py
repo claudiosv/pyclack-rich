@@ -1,14 +1,20 @@
+from __future__ import annotations
+
+from collections.abc import Callable
+from typing import Any
+
+from pyclack.utils.styling import Color
+
 from .prompt import *
-from typing import Optional, Callable, Any, Union
 
 
 class PasswordPrompt(Prompt):
     def __init__(
         self,
-        render: Callable[["PasswordPrompt"], Optional[str]],
+        render: Callable[[PasswordPrompt], str | None],
         mask: str = "•",
         placeholder: str = "",
-        validate: Optional[Callable[[Any], Optional[str]]] = None,
+        validate: Callable[[Any], str | None] | None = None,
         debug: bool = False,
     ):
         super().__init__(
@@ -35,11 +41,11 @@ class PasswordPrompt(Prompt):
         """Return the masked version of the value."""
         return self._mask * len(self.value) if self.value else ""
 
-    def _handle_finalize(self, *args):
+    def _handle_finalize(self, *args) -> None:
         """Handle the finalize event."""
         self.value_with_cursor = self.masked
 
-    def _handle_key(self, char: str):
+    def _handle_key(self, char: str) -> None:
         """Handle key input events."""
         if char == readchar.key.BACKSPACE:
             if self._cursor > 0:
@@ -52,7 +58,7 @@ class PasswordPrompt(Prompt):
         self.value = "".join(self._text_buffer)
         self._update_value_with_cursor()
 
-    def _update_value_with_cursor(self):
+    def _update_value_with_cursor(self) -> None:
         """Update the value_with_cursor property based on current cursor position."""
         color = Color()
         if self._cursor >= len(self.value):
@@ -62,7 +68,7 @@ class PasswordPrompt(Prompt):
             s2 = self.masked[self._cursor :]
             self.value_with_cursor = f"{s1}{color.inverse(s2[0])}{s2[1:]}"
 
-    async def prompt(self) -> Union[str, object]:
+    async def prompt(self) -> str | object:
         """Override prompt method to initialize text buffer."""
         self._text_buffer = list(self.initial_value) if self.initial_value else []
         self._cursor = len(self._text_buffer)

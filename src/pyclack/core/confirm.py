@@ -1,11 +1,14 @@
+from __future__ import annotations
+
+from collections.abc import Callable
+
 from .prompt import *
-from typing import Optional, Callable, Any, Union
 
 
 class ConfirmPrompt(Prompt):
     def __init__(
         self,
-        render: Callable[["ConfirmPrompt"], Optional[str]],
+        render: Callable[[ConfirmPrompt], str | None],
         active: str = "Yes",
         inactive: str = "No",
         initial_value: bool = False,
@@ -35,25 +38,23 @@ class ConfirmPrompt(Prompt):
     def _value(self) -> bool:
         return self.cursor == 0
 
-    def _handle_value(self, *args):
+    def _handle_value(self, *args) -> None:
         """Handle value changes."""
         self.value = self._value
 
-    def _handle_confirm(self, confirm: bool):
+    def _handle_confirm(self, confirm: bool) -> None:
         """Handle confirmation (y/n key press)."""
-        sys.stdout.write("\033[A")  # Move cursor up one line
         self.value = confirm
         self.state = "submit"
-        self.close()
 
-    def _handle_cursor(self, direction: str):
+    def _handle_cursor(self, direction: str) -> None:
         """Handle cursor movement (left/right/up/down)."""
-        if direction in ("left", "right", "up", "down"):
+        if direction in {"left", "right", "up", "down"}:
             self.value = not self.value
 
     def handle_key(self, key: str) -> bool:
         """Override key handling for confirm-specific behavior."""
-        if key.lower() in ("y", "n"):
+        if key.lower() in {"y", "n"}:
             self._handle_confirm(key.lower() == "y")
             return False
 

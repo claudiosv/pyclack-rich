@@ -1,14 +1,19 @@
+from __future__ import annotations
+
 import sys
-import re
-import shutil
-from typing import Any, List, Optional, Callable
+from collections.abc import Callable
+from typing import Any
+
+from rich.text import Text
+
+from pyclack.utils.console import console
 
 
 def is_unicode_supported() -> bool:
     """Check if terminal supports Unicode characters."""
     try:
         return bool(sys.stdout.encoding.lower().startswith("utf"))
-    except:
+    except Exception:
         return False
 
 
@@ -49,85 +54,94 @@ S_ERROR = s("■", "x")
 
 
 class Color:
-    """ANSI color and style utilities."""
+    """Style helpers that wrap text in rich console markup.
+
+    Kept as the same call-style API pyclack's rendering code already uses
+    (`Color.cyan("...")`), but instead of emitting raw ANSI escapes it emits
+    rich markup tags, which the prompt renderers understand via
+    `rich.text.Text.from_markup`.
+    """
+
+    @staticmethod
+    def _wrap(style: str, text: str) -> str:
+        return f"[{style}]{text}[/{style}]"
 
     @staticmethod
     def gray(text: str) -> str:
-        return f"\033[90m{text}\033[0m"
+        return Color._wrap("bright_black", text)
 
     @staticmethod
     def cyan(text: str) -> str:
-        return f"\033[36m{text}\033[0m"
+        return Color._wrap("cyan", text)
 
     @staticmethod
     def red(text: str) -> str:
-        return f"\033[31m{text}\033[0m"
+        return Color._wrap("red", text)
 
     @staticmethod
     def green(text: str) -> str:
-        return f"\033[32m{text}\033[0m"
+        return Color._wrap("green", text)
 
     @staticmethod
     def yellow(text: str) -> str:
-        return f"\033[33m{text}\033[0m"
+        return Color._wrap("yellow", text)
 
     @staticmethod
     def blue(text: str) -> str:
-        return f"\033[34m{text}\033[0m"
+        return Color._wrap("blue", text)
 
     @staticmethod
     def magenta(text: str) -> str:
-        return f"\033[35m{text}\033[0m"
+        return Color._wrap("magenta", text)
 
     @staticmethod
     def dim(text: str) -> str:
-        return f"\033[2m{text}\033[0m"
+        return Color._wrap("dim", text)
 
     @staticmethod
     def inverse(text: str) -> str:
-        return f"\033[7m{text}\033[0m"
+        return Color._wrap("reverse", text)
 
     @staticmethod
     def hidden(text: str) -> str:
-        return f"\033[8m{text}\033[0m"
+        return Color._wrap("conceal", text)
 
     @staticmethod
     def strikethrough(text: str) -> str:
-        return f"\033[9m{text}\033[0m"
+        return Color._wrap("strike", text)
 
     @staticmethod
     def reset(text: str) -> str:
-        return f"\033[0m{text}"
+        return Color._wrap("default", text)
 
 
-def strip_ansi(text: str) -> str:
-    """Remove ANSI escape sequences from text."""
-    ansi_pattern = r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])"
-    return re.sub(ansi_pattern, "", text)
+def visible_len(text: str) -> int:
+    """Cell-width of `text`, ignoring rich markup (replaces the old strip_ansi + len)."""
+    return Text.from_markup(text).cell_len
 
 
 def symbol(state: str) -> str:
     """Get the appropriate symbol for the current state."""
-    if state in ("initial", "active"):
+    if state in {"initial", "active"}:
         return Color.cyan(S_STEP_ACTIVE)
-    elif state == "cancel":
+    if state == "cancel":
         return Color.red(S_STEP_CANCEL)
-    elif state == "error":
+    if state == "error":
         return Color.yellow(S_STEP_ERROR)
-    elif state == "submit":
+    if state == "submit":
         return Color.green(S_STEP_SUBMIT)
     return ""
 
 
 def limit_options(
-    options: List[Any],
+    options: list[Any],
     cursor: int,
-    max_items: Optional[int] = None,
+    max_items: int | None = None,
     style: Callable[[Any, bool], str] = lambda x, _: str(x),
-) -> List[str]:
+) -> list[str]:
     """Limit visible options based on terminal size and cursor position."""
     param_max_items = max_items or float("inf")
-    output_max_items = max(shutil.get_terminal_size().lines - 4, 0)
+    output_max_items = max(console.size.height - 4, 0)
     max_items = min(output_max_items, max(param_max_items, 5))
 
     window_start = 0

@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from functools import wraps
+
 from pyclack.core import Spinner
 from pyclack.utils.styling import Color
 
@@ -44,8 +45,7 @@ def with_spinner(message: str = ""):
         async def wrapper(*args, **kwargs):
             async with spinner(message) as spin:
                 try:
-                    result = await func(*args, **kwargs)
-                    return result
+                    return await func(*args, **kwargs)
                 except Exception as e:
                     spin.stop(str(e), code=2)
                     raise

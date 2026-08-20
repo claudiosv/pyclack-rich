@@ -1,15 +1,21 @@
+from __future__ import annotations
+
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, TypeVar
+
 from .prompt import *
-from .select import Option
-from typing import Any, Generic, TypeVar, List, Optional, TypeVar, Callable
+
+if TYPE_CHECKING:
+    from .select import Option
 
 T = TypeVar("T")
 
 
-class SelectKeyPrompt(Prompt, Generic[T]):
+class SelectKeyPrompt[T](Prompt):
     def __init__(
         self,
-        render: Callable[["SelectKeyPrompt"], Optional[str]],
-        options: List[Option],
+        render: Callable[[SelectKeyPrompt], str | None],
+        options: list[Option],
         initial_value: Any = None,
         debug: bool = False,
     ):
@@ -50,10 +56,10 @@ class SelectKeyPrompt(Prompt, Generic[T]):
         return self._cursor
 
     @cursor.setter
-    def cursor(self, value: int):
+    def cursor(self, value: int) -> None:
         self._cursor = value
 
-    def _handle_key(self, key: str):
+    def _handle_key(self, key: str) -> None:
         """Handle key press events."""
         if key not in self.keys:
             return

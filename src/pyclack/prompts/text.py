@@ -1,6 +1,12 @@
-from typing import Callable, Optional, Union, Any
-from pyclack.core import TextPrompt, MultilineTextPrompt, is_cancel
-from pyclack.utils.styling import Color, symbol, S_BAR, S_BAR_END
+from __future__ import annotations
+
+from collections.abc import Callable
+
+from rich.text import Text
+
+from pyclack.core import MultilineTextPrompt, TextPrompt, is_cancel
+from pyclack.utils.console import console
+from pyclack.utils.styling import S_BAR, S_BAR_END, Color, symbol
 
 
 async def text(
@@ -8,8 +14,8 @@ async def text(
     placeholder: str = "",
     default_value: str = "",
     initial_value: str = "",
-    validate: Optional[Callable[[str], Optional[str]]] = None,
-) -> Union[str, object]:
+    validate: Callable[[str], str | None] | None = None,
+) -> str | object:
     def render(prompt: TextPrompt) -> str:
         title = f"{Color.gray(S_BAR)}\n{symbol(prompt.state)}  {message}\n"
         placeholder_text = (
@@ -25,16 +31,15 @@ async def text(
                 f"{Color.yellow(S_BAR)}  {value}\n"
                 f"{Color.yellow(S_BAR_END)}  {Color.yellow(prompt.error)}\n"
             )
-        elif prompt.state == "submit":
-            return f"{Color.gray(S_BAR)}\n" f"{symbol(prompt.state)}  {message}\n"
-        elif prompt.state == "cancel":
+        if prompt.state == "submit":
+            return f"{Color.gray(S_BAR)}\n{symbol(prompt.state)}  {message}\n"
+        if prompt.state == "cancel":
             return (
                 f"{title.rstrip()}\n"
                 f"{Color.red(S_BAR)}  {Color.dim(prompt.value) if prompt.value else placeholder_text}\n"
                 f"{Color.red(S_BAR_END)}  {Color.red('Operation cancelled')}\n"
             )
-        else:
-            return f"{title}{Color.cyan(S_BAR)}  {value}\n{Color.cyan(S_BAR_END)}\n"
+        return f"{title}{Color.cyan(S_BAR)}  {value}\n{Color.cyan(S_BAR_END)}\n"
 
     prompt = TextPrompt(
         render=render,
@@ -48,7 +53,7 @@ async def text(
     if is_cancel(result):
         return result
 
-    print(f"{Color.gray(S_BAR)}  {Color.dim(result)}")
+    console.print(Text.from_markup(f"{Color.gray(S_BAR)}  {Color.dim(result)}"))
     return result
 
 
@@ -57,13 +62,12 @@ async def multiline_text(
     placeholder: str = "",
     default_value: str = "",
     initial_value: str = "",
-    validate: Optional[Callable[[str], Optional[str]]] = None,
-) -> Union[str, object]:
+    validate: Callable[[str], str | None] | None = None,
+) -> str | object:
     def render(prompt: MultilineTextPrompt) -> str:
         output = []
 
-        output.append(f"{Color.gray(S_BAR)}")
-        output.append(f"{symbol(prompt.state)}  {message}")
+        output.extend((f"{Color.gray(S_BAR)}", f"{symbol(prompt.state)}  {message}"))
 
         placeholder_text = (
             Color.inverse(placeholder[0]) + Color.dim(placeholder[1:])
@@ -77,8 +81,10 @@ async def multiline_text(
 
         for i, line in enumerate(value_lines):
             if i == len(value_lines) - 1:  # Last line
-                output.append(f"{Color.cyan(S_BAR)}  {line}")
-                output.append(f"{Color.cyan(S_BAR_END)}")
+                output.extend((
+                    f"{Color.cyan(S_BAR)}  {line}",
+                    f"{Color.cyan(S_BAR_END)}",
+                ))
             else:  # Middle lines
                 output.append(f"{Color.cyan(S_BAR)}  {line}")
 
