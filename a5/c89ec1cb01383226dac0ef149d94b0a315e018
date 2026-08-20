@@ -1,0 +1,29 @@
+src/pyclack/core/__init__.py
+  s_ccef399279de89::t_172d5c14259525 7
+src/pyclack/prompts/menu.py
+  s_ccef399279de89::t_24adb81f4ec38d 1-34
+pyclack_demo.py
+  s_ccef399279de89::t_21968c98b37a63 112
+  s_ccef399279de89::t_c905fb3792cd19 74-78
+src/pyclack/core/menu.py
+  s_ccef399279de89::t_4e1a6d6d129fa6 1-25,27,29,31,33-152,154-175,177-185,187-189
+  s_ccef399279de89::t_d9d0be609741c7 26,28,30,32,153,176,186
+src/pyclack/prompts/__init__.py
+  s_ccef399279de89::t_238eb54adbd917 22-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a5c89ec1cb01383226dac0ef149d94b0a315e018",
+  "prompts": {},
+  "sessions": {
+    "s_ccef399279de89": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "51aa7f49-4ac9-4197-ae8c-a51aff4128ea",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Claudio Spiess <claudiosv@users.noreply.github.com>"
+    }
+  }
+}
