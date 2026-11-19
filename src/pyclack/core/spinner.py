@@ -32,7 +32,7 @@ class Spinner:
 
         console.print(Text.from_markup(f"[bright_black]{S_BAR}[/bright_black]"))
 
-        renderable = RichSpinner(_SPINNER_NAME, text=self.message, style="magenta")
+        renderable = RichSpinner(_SPINNER_NAME, text=self.message, style="magenta", speed=0.4)
         self._live = Live(
             renderable, console=console, transient=True, refresh_per_second=12.5
         )
